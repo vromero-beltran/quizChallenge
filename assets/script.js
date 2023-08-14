@@ -1,130 +1,205 @@
-var timeLeft = 60; //Setting the timer seconds.
-var timeInterval;
-var question = [
+const questions = [
     {
-        question:"What is the color of the sun when it is cool hot?",
-        option:["White","Blue","Red","Yellow"],
-        answer: 0
+        question:"What is the color of the sun when it is at its coolest point?",
+        option:[
+            "White",
+            "Blue",
+            "Red",
+            "Yellow"
+        ],
+        answerIndex: 2
     },
     {
-        question:"What is the color of the sun when it is medium hot?",
-        option:["Blue","Red","Yellow","White"],
-        answer: 0
+        question:"What is the color of the sun when it is at a medium point of heat?",
+        option:[
+            "Blue",
+            "Red",
+            "Yellow",
+            "White"
+        ],
+        answerIndex: 3
     },
     {
-        question:"What is the color of the sun when it is very hot?",
-        option:["Yellow","Blue","White","Red"],
-        answer: 0
+        question:"What is the color of the sun at its hottest point?",
+        option:[
+            "Yellow",
+            "Blue",
+            "White",
+            "Red"
+        ],
+        answerIndex: 1
     },
     {
         question:"When looking at the Sun from Earth, What color is it? (Please don't stare at the Sun.)",
-        option:["White","Yellow","Red","Blue"],
-        answer: 0
+        option:[
+            "White",
+            "Yellow",
+            "Red",
+            "Blue"
+        ],
+        answerIndex: 0
     },
     {
         question:"When a painter wants to use a cooler colored paint, what color is that?",
-        option:["Red","White","Blue","Yellow"],
-        answer: 0
+        option:[
+            "Red",
+            "White",
+            "Blue",
+            "Yellow"
+        ],
+        answerIndex: 2
     },
     {
         question:"What color scatters the least from the sunlight when it hits the atmosphere?",
-        option:["Blue","Red","Violet","Green"],
-        answer: 0
+        option:[
+            "Blue",
+            "Red",
+            "Violet",
+            "Green"
+        ],
+        answerIndex: 1
     },
     {
-        question:"When sunlight hits the atmosphere the shortest wavelengthsare scattered the most, what color is scattered the most but you don't see it in the atmosphere?",
-        option:["Green","Orange","Endigo","Violet"],
-        answer: 0
+        question:"When sunlight hits the atmosphere the shortest wavelengthsare scattered the most, what color is scattered the most but you don't see it in the sky?",
+        option:[
+            "Green",
+            "Orange",
+            "indigo",
+            "Violet"
+        ],
+        answerIndex: 3
     },
     {
-        qusetion:"What color light travels to least in the dark?",
-        option:["Blue","Red","Yellow","Orange"],
-        answer: 0
+        qusetion:"What color light travels the least in the dark?",
+        option:[
+            "Blue",
+            "Red",
+            "Yellow",
+            "Orange"
+        ],
+        answerIndex: 1
     },
     {
-        question:"What color light helps you stay up in the dark?",
-        option:["Red","Green","Blue","Yellow"],
-        answer: 0
+        question:"What color light helps you stay up in the dark/night?",
+        option:[
+            "Red",
+            "Green",
+            "Blue",
+            "Yellow"
+        ],
+        answerIndex: 2
     },
     {
         question:"What wavelength of light does grass not absorb as energy",
-        option:["Blue Wavelength","Violet Wavelength","Endigo Wavelength","Green Wavelength"],
-        answer: 0
+        option:[
+            "Blue Wavelength",
+            "Violet Wavelength",
+            "Indigo Wavelength",
+            "Green Wavelength"
+        ],
+        answerIndex: 3
     }
 ];
-var currentQuestion = 0;
-var score = 0;
-var startBtn = document.getElementById("start-btn");
-var restartBtn = document.getElementById("restart-btn");
-var submitBtn = document.getElementById("submit-btn");
-var initialsInput = document.getElementById("initials-inout");
+// These are my Global Variables
+let currentQuestionIndex;
+let timeLeft;
+let startingTime = 75;
+let timerInterval;
+let score;
+let updateTimer;
+// These are my DOM elements
+const startButton = document.getElementById('start-btn');
+const questionElement = document.getElementById('question');
+const optionElement = document.getElementById('option');
+// This starts the quiz when start button is clicked
+startButton.addEventListener('click', startQuiz);
 
-function startQuiz() { //This function starts the time and shows the questions.
-    startBtn.style.display = "none";
-    timeInterval = setInterval(updateTime, 1000);
-    showQuestion();
-    startBtn.addEventListener("click", startQuiz);
+function startQuiz() {
+    timeLeft = 75; // This sets time and starts timer
+    startTimer ();
+    document.getElementById('start-btn').style.display = 'none'; 
+    displayQuestion(questions[0]); // Display first question and options
+  }
+
+  function showquestion(index) {
+    displayQuestion(questions[index]);
+
+    optionElement.addEventListener('click', e => {
+        checkAnswer(e.target.innerText);
+    })
+  }
+
+function displayQuestion(question) {
+    questionElement.innerText = question.text;
+
+    questions.forEach(element => {
+        
+    });(option => {
+        const button = document.createElement('button');
+        button.innerText = option;
+        optionElement.appendChild(button);
+    });
 }
 
-function showQuestion() {
-    var questionElement = document.getElementById("question");
-    var optionElement = document.getElementById("option");
-    questionElement.textContent = question[currentQuestion].question;
-    optionElement.innerHTML = "";
-
-    for (var i = 0; i< questions[currentQuestion].options.length; i++) {
-        var option = document.createElement("button");
-        option.className = "option";
-        option.textContent = questions[currentQuestion].options[i];
-
-        option.addEventListener("click", checkAnwer);
-    }
-}
-
-function checkAnwer(e) {
-    var selectedOption = e.target;
-    var answerIndex = question[currentQuestion].answer;
-
-    if (selectedOption.textContent === questions[currentQuestion].options[answerIndex]) {
-        score++;
-    }
-    currentQuestion++;
-
-    if (currentQuestion <questions.length) {
-        showQuestion()
+function checkAnswer(answer) {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < questions.length) {
+        showquestion(currentQuestionIndex);
     } else {
         endQuiz();
     }
 }
 
-function updateTimer() {
-    var timeLeftElement = document.getElementById("time-left");
-
-    if (timeLeft > 0) {
+function startTimer () {
+    timerInterval = setInterval (() =>{
         timeLeft--;
-        timeLeftElement.textContent = timeLeft;    
-    } else {
-        endQuiz();
+        document.getElementById('timer').textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+            endQuiz();
+        }
+    }, 1000);
+}
+
+function endQuiz () {
+    clearInterval(timerInterval);
+}
+
+function saveLastHighScore() {
+    // Save related form data as an object
+    var highScore = {
+      score: score.value,
+      initials: initials.value
+    };
+    // Use .setItem() to store object in storage and JSON.stringify to convert it as a string
+    localStorage.setItem('highscore', JSON.stringify(highScore));
+  }
+
+  function renderLastHighScore() {
+    // Use JSON.parse() to convert text to JavaScript object
+    var lastHighScore = JSON.parse(localStorage.getItem('highScore'));
+    // Check if data is returned, if not exit out of the function
+    if (lastHighScore !== null) {
+      document.getElementById('saved-score').innerHTML = lastHighScore.score;
+      document.getElementById('saved-initials').innerHTML = lastHighScore.initials;
     }
-}
+  }
+  
 
-function endQuiz() {
-    clearInterval(timeInterval);
-    var highScoreElement = document.getElementById("high-score");
-    var finalScoreElement = document.getElementById("final-score");
+const restartButton = document.getElementById('restart');
+restartButton.addEventListener('click', restartQuiz);
 
-    highScoreElement.textContent = "High Score" + score;
-    finalScoreElement.textContent = "Fianl Score" + score;
-
-    initialsInput.style.display = "block";
-    submitBtn.style.display = "block";
-}
-
-function restartQuiz() {
-    currentQuestion = 0;
+function restartQuiz () {
+    currentQuestionIndex = 0; //resets the quiz state
     score = 0;
-    timeLeft = 60;
-    initialsInput = "none";
-    submitBtn.style.display = "none";
-    startQuiz();
+    timeLeft = startingTime;
+
+    resultsElement.style.display = 'none';
+    startScreenElement.startButton.display = 'block';
+
+    startButton.addEventListener("click", startQuiz); //relod start button click listener
+    clearInterval(timerInterval); // resets timer
+    timerElement.textContent = timeLeft;
+    questionElement.innerHTML = ""; // clears questions and options
+    optionElement.innerHTML ="";
 }
