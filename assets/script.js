@@ -125,28 +125,26 @@ function startQuiz() {
 function showQuestion() { // code to display the current question and option DOM element.
     const questionDiv = document.getElementById('question');
     const optionDiv = document.getElementById('option');
-    questionDiv.innerText = questions[currentIndex].question;
-    optiondeiv.innerHTML = "";
-
-    questions[currentIndex].options.forEach(option => {
-        const button = document.createElement('botton');
-        button.classList.add('option');
-        button.innerText = option;
-
-        button.addEventListener('click', () => {
-            checkAnswer(option);
-        });
-        optionDiv.appendChild(button);
-    })
-}
+    for (let i = 0; i < questions.length; i++) {
+        const element = questions[i];
+        console.log("element", element)
+    
+        questionDiv.innerText = questions[i].question;
+    }
+};
 
 function checkAnswer(answer) {
-    currentQuestionIndex++;
-    if (currentQuestionIndex < questions.length) {
-        showquestion(currentQuestionIndex);
-    } else {
-        endQuiz();
-    }
+    if ((questions[currentQuestionIndex].option)[answer] === (questions[currentQuestionIndex].correct)) {
+        alert ("Correct!");
+        score++;
+        } else{
+            alert ('Wrong!');
+            timeLeft -=15;
+        }
+            currentQuestionIndex++;
+        if (currentQuestionIndex >= questions.length){
+            endGame();
+        };
 }
 
 function startTimer () {
