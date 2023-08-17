@@ -90,7 +90,7 @@ var questions = [
         answerIndex: 2
     },
     {
-        question: "What wavelength of light does grass not absorb as energy",
+        question: "What wavelength of light does grass not absorb as energy?",
         option:[
             "Blue Wavelength",
             "Violet Wavelength",
@@ -101,9 +101,10 @@ var questions = [
     }
 ];
 // These are my Global Variables
+let restartButton = document.querySelector('#restart');
 let currentQuestionIndex;
 let timeLeft;
-let startingTime = 76;
+let startingTime = 70;
 let timerInterval;
 let score;
 let updateTimer;
@@ -111,27 +112,46 @@ let updateTimer;
 // These are my DOM elements
 var startButton = document.getElementById('start-btn');
 var questionElement = document.getElementById('question');
-var optionElement = document.getElementById('option');
+var optionElement = document.getElementById('options');
 // This starts the quiz when start button is clicked
 startButton.addEventListener('click', startQuiz);
 
 function startQuiz() {
-    timeLeft = 76; // This sets time and starts timer
+    timeLeft = 70; // This sets time and starts timer
     startTimer ();
     document.getElementById('start-btn').style.display = 'none'; 
-    showQuestion(0); // Display first question and options
+    showQuestion(); // Display first question and options
+    displayOptions();
+}
+
+function startTimer () {
+    timerInterval = setInterval (() =>{
+        timeLeft--;
+        document.getElementById('timer').textContent = timeLeft;
+        if (timeLeft <= 0) {
+            endQuiz();
+        }
+    }, 1000);
+    console.log('is the startTimer function working?')
 }
 
 function showQuestion() { // code to display the current question and option DOM element.
-    const questionDiv = document.getElementById('question');
-    const optionDiv = document.getElementById('option');
-    for (let i = 0; i < questions.length; i++) {
-        const element = questions[i];
-        console.log("element", element)
-    
-        questionDiv.innerText = questions[i].question;
-    }
-};
+    for (let i = 0; i < questions.length; i++) { // loops through each question in the question array
+        const element = questions[i]; // stores curent question object in element
+        console.log("element", element); // logs the current question object
+        questionElement.innerText = questions[i].question; // sets question div text to current queston text
+    };
+    console.log('is the showQuestion function working?')
+}
+
+function displayOptions() {
+    for (let i = 0; i < displayOptions.length; i++) {
+        const element = options[i];
+        console.log('element', element);
+        optionElement.innerText = options[i].option;
+    };
+    console.log('is the displayOptions function working?')
+}
 
 function checkAnswer(answer) {
     if ((questions[currentQuestionIndex].option)[answer] === (questions[currentQuestionIndex].correct)) {
@@ -143,23 +163,13 @@ function checkAnswer(answer) {
         }
             currentQuestionIndex++;
         if (currentQuestionIndex >= questions.length){
-            endGame();
-        };
-}
-
-function startTimer () {
-    timerInterval = setInterval (() =>{
-        timeLeft--;
-        document.getElementById('timer').textContent = timeLeft;
-
-        if (timeLeft <= 0) {
             endQuiz();
-        }
-    }, 1000);
+        };
 }
 
 function endQuiz () {
     clearInterval(timerInterval);
+    displayLastHighScore();
 }
 
 function saveLastHighScore() {
@@ -198,8 +208,17 @@ function displayLastHighScore () {
     } else {
         var highScoreEl = document.querySelector('#final-score');
         highScoreEl.textContent = 'No Scores Yet';
-    }
+    };
 }
 
-const restartButton = document.getElementById('restart');
-restartButton.addEventListener('click', restartButton);
+
+restartButton.addEventListener('click', function (e) { // anonymous function to restart the page.
+    if (e.target.matches('#restart')) {
+            document.location.reload();
+        };
+        currentQuestionIndex = 0;
+        score = 0;
+        timeLeft = 10;
+        restartButton.addEventListener('click', restartQuiz);
+})
+
