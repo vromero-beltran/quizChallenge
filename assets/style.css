@@ -7,12 +7,13 @@
 body {
   font-size: 30px;
   font-family: "Roboto", sans-serif;
-  background-color: #eff5f8;
-  color: #001b44;
+  background: rgb(238,174,202);
+  background: radial-gradient(circle, rgba(238,174,202,1) 50%, rgba(148,187,233,1) 67%);
 }
 
 .container {
-    background-color:	#FFFFE0;
+    background: rgb(63,94,251);
+    background: radial-gradient(circle, rgba(63,94,251,1) 43%, rgba(252,70,107,1) 72%);
     border: 1px solid #eceff1;
     border-radius: 8px;
     box-shadow: rgba(60, 64, 67, 2) 0 1px 2px 0,

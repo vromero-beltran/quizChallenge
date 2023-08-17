@@ -1,12 +1,7 @@
 var questions = [
     {
         question: "What is the color of the sun when it is at its coolest point?",
-        option:[
-            "White",
-            "Blue",
-            "Red",
-            "Yellow"
-        ],
+        option:["White","Blue","Red","Yellow"],
         answerIndex: 2
     },
     {
@@ -91,12 +86,7 @@ var questions = [
     },
     {
         question: "What wavelength of light does grass not absorb as energy?",
-        option:[
-            "Blue Wavelength",
-            "Violet Wavelength",
-            "Indigo Wavelength",
-            "Green Wavelength"
-        ],
+        option:["Blue Wavelength","Violet Wavelength","Indigo Wavelength","Green Wavelength"],
         answerIndex: 3
     }
 ];
@@ -104,7 +94,7 @@ var questions = [
 let restartButton = document.querySelector('#restart');
 let currentQuestionIndex;
 let timeLeft;
-let startingTime = 70;
+var startingTime = 70;
 let timerInterval;
 let score;
 let updateTimer;
