@@ -109,7 +109,8 @@ let timerInterval;
 let score = 0;
 let updateTimer;
 let answerIndex;
-let initials = document.querySelector('#initials-input') 
+let initials = document.querySelector('#initials-input');
+var submitButton = document.getElementById("submit-btn"); 
 
 // These are my DOM elements
 var startButton = document.getElementById('start-btn');
@@ -175,9 +176,20 @@ function checkAnswer(clickedOption) {
     }
 }
 
-function endQuiz () {
+function endQuiz() {
+    // Clear timers
     clearInterval(timerInterval);
-    displayLastHighScore();
+    clearInterval(showQuestion);
+    // Check if timer reached 0 or all questions answered
+    if (timeLeft <= 0 || currentQuestionIndex >= questions.length) {
+      // Game over
+        gameOver = true;
+        currentQuestionIndex = 0;
+        score = 0;
+        timeLeft = 0;
+      // Display last score
+        displayLastHighScore();
+    }
 }
 
 function saveLastHighScore() {
@@ -192,7 +204,6 @@ function saveLastHighScore() {
 const submitHighScore = document.querySelector('#submit-btn');
 submitHighScore.addEventListener('click', ()=> {
     saveLastHighScore();
-    console.log('hello world')
 })
 
 function renderLastHighScore() {
@@ -205,20 +216,28 @@ function renderLastHighScore() {
     }
 }
 
-function displayLastHighScore () {
-    var highScores = JSON.parse(localStorage.getItem('highScore')) || [];
-    highScores.sort(function(a,b) {
-        return b.score - a.score;
-    });
+function displayLastHighScore() {
+    // Get high scores from localStorage
+    var highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+    // Sort scores in descending order
+    highScores.sort((a, b) => b.score - a.score);
+    // Get the top score
     var topScore = highScores[0];
-    if (topScore) {
-        var highScoreEl =document.querySelector('final-score');
-        highScoreEl.textContent = topScore.initials + ' - ' + topScore.score;
+    if(topScore) {
+      // If there is a top score, display it
+        document.getElementById('final-score').textContent = topScore.initials + ' - ' + topScore.score;
+      // Also set the saved score and initials
+        document.getElementById('saved-score').textContent = topScore.score;
+        document.getElementById('saved-initials').textContent = topScore.initials;
     } else {
-        var highScoreEl = document.querySelector('#final-score');
-        highScoreEl.textContent = 'No Scores Yet';
-    };
+      // If no scores, set default text
+        document.getElementById('final-score').textContent = 'No Scores Yet';
+        document.getElementById('saved-score').textContent = '';
+        document.getElementById('saved-initials').textContent = '';
+    }
 }
+// Call displayLastHighScore when submit button is clicked
+submitButton.addEventListener('click', displayLastHighScore);
 
 
 restartButton.addEventListener('click', function (e) { // anonymous function to restart the page.
@@ -227,6 +246,6 @@ restartButton.addEventListener('click', function (e) { // anonymous function to 
         };
         currentQuestionIndex = 0;
         score = 0;
-        timeLeft = 10;
-        restartButton.addEventListener('click', restartQuiz);
+        timeLeft = 0;
+        restartButton.addEventListener('click', startQuiz);
 });
