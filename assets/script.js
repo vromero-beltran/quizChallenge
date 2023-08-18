@@ -102,12 +102,14 @@ var questions = [
 ];
 // These are my Global Variables
 let restartButton = document.querySelector('#restart');
-let currentQuestionIndex;
+let currentQuestionIndex = 0;
 let timeLeft;
 var startingTime = 70;
 let timerInterval;
-let score;
+let score = 0;
 let updateTimer;
+let answerIndex;
+let initials = document.querySelector('#initials-input') 
 
 // These are my DOM elements
 var startButton = document.getElementById('start-btn');
@@ -121,7 +123,6 @@ function startQuiz() {
     startTimer ();
     document.getElementById('start-btn').style.display = 'none'; // makes the start button disapear.
     showQuestion(); // Display first question and options
-//    displayOptions();
 }
 
 function startTimer () {
@@ -135,45 +136,43 @@ function startTimer () {
     
 }
 
-function showQuestion() { // code to display the current question and option DOM element.
-    for (let i = 0; i < questions.length; i++) { // loops through each question in the question array.
-        // console.log(questions);
-        const element = questions[i]; // stores curent question object in element.
-        console.log("element", element); // logs the current question object.
-        questionElement.innerText = questions[i].question; // sets question div text to current queston text.
-        for (let x = 0; x < questions[i].option.length; x++) {
-            let newOption = document.createElement('button'); // creates a new button tag with an id of optionX where X is the index number
-            newOption.setAttribute('class', 'answers');
-            newOption.setAttribute('value', questions[i].option[x]);
-            newOption.textContent = questions[i].option[x];
-            optionElement.append = newOption;
-        };
-    };
-    
-    
+function showQuestion(){
+    optionElement.innerHTML = ''
+    for (let q = 0; q < questions[currentQuestionIndex].option.length; q++) {
+        answerIndex = questions[currentQuestionIndex].answerIndex;
+        questionElement.innerText = questions[currentQuestionIndex].question;
+            let option = questions[currentQuestionIndex].option[q];
+            let optn = document.createElement("button");
+            optn.setAttribute ("class","optns");
+            optn.setAttribute ('value', questions[currentQuestionIndex],option[q]);
+            optn.innerText = questions[currentQuestionIndex].option[q];
+            optionElement.appendChild(optn);
+        
+    }
+    const optionButtons = document.querySelectorAll('.optns');
+console.log(optionButtons)
+optionButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        checkAnswer(button.innerText);
+    });
+});
 }
 
-//function displayOptions() {
-//    for (let i = 0; i < displayOptions.length; i++) {
-//        const element = options[i];
-//        console.log('element', element);
-//        optionElement.innerText = options[i].option;
-//    };
-//    console.log('is the displayOptions function working?')
-//}
-
-function checkAnswer(answer) {
-    if ((questions[currentQuestionIndex].option)[answer] === (questions[currentQuestionIndex].correct)) {
-        alert ("Correct!");
-        score++;
-        } else{
-            alert ('Wrong!');
-            timeLeft -=15;
-        }
-            currentQuestionIndex++;
-        if (currentQuestionIndex >= questions.length){
-            endQuiz();
-        };
+function checkAnswer(clickedOption) {
+    const currentQuestion = questions[currentQuestionIndex];
+    const answerIndex = currentQuestion.answerIndex;
+    if(clickedOption === answerIndex) {
+        alert ('Correct!');
+        score++;   
+    } else {
+        alert ('Wrong!');
+        timeLeft -=8;
+    }
+    currentQuestionIndex++;
+    showQuestion();
+    if (currentQuestionIndex >= questions.length) {
+        endQuiz ();
+    }
 }
 
 function endQuiz () {
@@ -184,12 +183,17 @@ function endQuiz () {
 function saveLastHighScore() {
     // Save related form data as an object
     var highScore = {
-        score: score.value,
+        score: score,
         initials: initials.value
     };
     // Use .setItem() to store object in storage and JSON.stringify to convert it as a string
     localStorage.setItem('highscore', JSON.stringify(highScore));
 }
+const submitHighScore = document.querySelector('#submit-btn');
+submitHighScore.addEventListener('click', ()=> {
+    saveLastHighScore();
+    console.log('hello world')
+})
 
 function renderLastHighScore() {
     // Use JSON.parse() to convert text to JavaScript object
@@ -225,5 +229,4 @@ restartButton.addEventListener('click', function (e) { // anonymous function to 
         score = 0;
         timeLeft = 10;
         restartButton.addEventListener('click', restartQuiz);
-})
-
+});
